@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js" // This line specifies the code generator to be Prisma Client JS
+}
+
+datasource db {
+  provider = "postgresql" // This line defines the database provider as PostgreSQL
+  url      = env("DATABASE_URL") // This line tells Prisma to use the environment variable DATABASE_URL for the database connection string
+}
+
+// This section defines the User model
+
+model User {
+  id        Int      @id @default(autoincrement()) // Unique identifier for the user (primary key)
+  email     String   @unique // User's email address (unique)
+  phone     String? // User's phone number (optional)
+  firstName String? // User's first name (optional)
+  lastName  String? // User's last name (optional)
+  password  String // User's password
+  roles     Roles[]  @default([customer]) // User's roles (default: customer)
+  createdAt DateTime @default(now()) // Timestamp of user creation
+  updatedAt DateTime @default(now()) // Timestamp of last user update
+}
+
+// This section defines the TokenWhiteList model
+
+model TokenWhiteList {
+  id             Int      @id @default(autoincrement()) // Unique identifier for the token (primary key)
+  userId         Int // Foreign key referencing a User
+  accessToken    String? // User's access token (optional)
+  refreshToken   String? // User's refresh token (optional)
+  refreshTokenId String? // ID associated with the refresh token (optional)
+  expiredAt      DateTime // Token expiration time
+  createdAt      DateTime @default(now()) // Timestamp of token creation
+  updatedAt      DateTime @default(now()) // Timestamp of last token update
+}
+
+// This section defines the Roles enum
+
+enum Roles {
+  admin // User role: Administrator
+  customer // User role: Customer
+}
