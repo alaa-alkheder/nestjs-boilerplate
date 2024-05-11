@@ -7,6 +7,9 @@ export type AppConfig = {
   port: number;
   apiPrefix: string;
   fallbackLanguage: string;
+  tz: string;
   headerLanguage: string;
+  repoVersion: string;
+  versioning: string;
   // loggerLevel:string
 };

@@ -10,8 +10,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-
-enum Environment {
+ enum Environment {
   Development = 'development',
   Production = 'production',
   Test = 'test',
@@ -76,7 +75,9 @@ export default registerAs<AppConfig>('app', () => {
         ? parseInt(process.env.PORT, 10)
         : 3000,
     apiPrefix: process.env.API_PREFIX || 'api',
-
+    tz: process.env.APP_TZ || 'Asia/Jakarta',
+    repoVersion: 'x.y.z',
+    versioning: process.env.APP_VERSION,
     fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || 'en',
     headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',
   };

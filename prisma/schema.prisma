@@ -16,15 +16,27 @@ datasource db {
 // This section defines the User model
 
 model User {
-  id        Int      @id @default(autoincrement()) // Unique identifier for the user (primary key)
-  email     String   @unique // User's email address (unique)
-  phone     String? // User's phone number (optional)
-  firstName String? // User's first name (optional)
-  lastName  String? // User's last name (optional)
-  password  String // User's password
-  roles     Roles[]  @default([customer]) // User's roles (default: customer)
-  createdAt DateTime @default(now()) // Timestamp of user creation
-  updatedAt DateTime @default(now()) // Timestamp of last user update
+  id                Int                    @id @default(autoincrement()) // Unique identifier for the user (primary key)
+  email             String                 @unique // User's email address (unique)
+  phone             String? // User's phone number (optional)
+  firstName         String? // User's first name (optional)
+  lastName          String? // User's last name (optional)
+  mobileNumber      String? // User's mobile Number (optional)
+  password          String // User's password
+  passwordExpired   DateTime               @default(now()) //
+  passwordCreated   DateTime               @default(now()) //
+  passwordAttempt   Int                    @default(3) //
+  signUpDate        DateTime               @default(now())
+  signUpFrom        ENUM_USER_SIGN_UP_FROM
+  salt              String
+  isActive          Boolean
+  inactivePermanent Boolean
+  inactiveDate      DateTime?
+  blocked           Boolean
+  blockedDate       DateTime?
+  roles             Roles[]                @default([customer]) // User's roles (default: customer)
+  createdAt         DateTime               @default(now()) // Timestamp of user creation
+  updatedAt         DateTime               @default(now()) // Timestamp of last user update
 }
 
 // This section defines the TokenWhiteList model
@@ -45,4 +57,9 @@ model TokenWhiteList {
 enum Roles {
   admin // User role: Administrator
   customer // User role: Customer
+}
+
+enum ENUM_USER_SIGN_UP_FROM {
+  PUBLIC
+  ADMIN
 }

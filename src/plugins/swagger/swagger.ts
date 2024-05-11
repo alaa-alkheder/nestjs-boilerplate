@@ -2,30 +2,21 @@ import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestApplication } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { AllConfigType } from "@config/allConfig.type";
+import allConfig from "@config/allConfig.type";
 import { writeFileSync } from "fs";
 import { ResponseDefaultSerialization } from "../../common/response/response.default.serialization";
 import { ResponsePagingSerialization } from "../../common/response/response.paging.serialization";
 
 
 export default async function (app: NestApplication) {
-  const configService = app.get(ConfigService<AllConfigType>);
+  const configService = app.get(ConfigService);
   const logger = new Logger();
+  const env: string = configService.get<string>('app.nodeEnv');
+   const docName: string = configService.get<string>('swagger.docName');
+  const docDesc: string = configService.get<string>('swagger.docDesc');
+  const docVersion: string = configService.get<string>('swagger.docVersion');
+  const docPrefix: string = configService.get<string>('swagger.docPrefix');
 
-  const env: string = configService.getOrThrow('app.nodeEnv', { infer: true });
-  const docName: string = configService.getOrThrow('swagger.docName', {
-    infer: true,
-  });
-
-  const docDesc: string = configService.getOrThrow('swagger.docDesc', {
-    infer: true,
-  });
-  const docVersion: string = configService.getOrThrow('swagger.docVersion', {
-    infer: true,
-  });
-  const docPrefix: string = configService.getOrThrow('swagger.docPrefix', {
-    infer: true,
-  });
 
   if (env !== 'production') {
     const documentBuild = new DocumentBuilder()
@@ -57,7 +48,7 @@ export default async function (app: NestApplication) {
     SwaggerModule.setup(docPrefix, app, document, {
       jsonDocumentUrl: `${docPrefix}/json`,
       yamlDocumentUrl: `${docPrefix}/yaml`,
-      customSiteTitle: docName,
+      customSiteTitle: 'docName',
       swaggerOptions: {
         docExpansion: 'none',
         persistAuthorization: true,
@@ -72,7 +63,7 @@ export default async function (app: NestApplication) {
 
     logger.log(`==========================================================`);
 
-    logger.log(`Docs will serve on ${docPrefix}`, 'NestApplication');
+    logger.log(`Docs will serve on ${'docPrefix'}`, 'NestApplication');
 
     logger.log(`==========================================================`);
   }
